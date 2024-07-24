@@ -1,0 +1,33 @@
+---
+type Props = {
+  text: string;
+};
+const { text } = Astro.props;
+---
+
+<div class="flex flex-col items-center justify-start h-[720px]">
+    <div class="mt-30 flex flex-col items-center justify-between px-24 py-20 max-sm:px-5 max-sm:py-10 max-w-7xl justify-self-center w-full">
+     <img src="/top.png" alt="LEEROY•JENKINS" class="mb-10 max-w-[300px] mx-auto" />
+
+        <h1 class="px-40 font-comic-sans text-[48px] font-bold leading-[72px] tracking-[-0.88] text-left mb-5 text-white">{text}
+            
+        </h1>
+            <p class="text-center mb-5 text-white">
+                <span class="font-comic-sans text-[26px] font-bold leading-[39px] tracking-[-0.88] inline-block">
+                Created as the 777th rune by the most doxxed undoxxed team ever.
+            </p>
+            
+            <p class="text-center mb-5 text-white">
+                <span class="font-comic-sans text-[26px] font-bold leading-[39px] tracking-[-0.88] inline-block">
+           
+                 This site is by the community, for the community.
+            </p>
+        <button class="w-[460px] h-[66px] mt-5 mx-auto rounded-[14px] bg-[#F6CF1C] text-center">
+             <a href="https://magiceden.io/runes/LEEROY%E2%80%A2JENKINS" 
+                class="font-comic-sans text-[32px] font-normal leading-[48px] tracking-[0.39] inline-block">
+                Magic Eden
+             </a>
+        </button>
+    </div>    
+  </div>
+  

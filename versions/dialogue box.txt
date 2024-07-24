@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Button with Dialogue Box and Close Icon</title>
+  <!-- Include Tailwind CSS from CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Include Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <style>
+    .dialog {
+      width: 500px; /* Adjust as needed */
+      max-width: 90%;
+    }
+    
+  </style>
+</head>
+
+
+<!-- Dialog box markup -->
+<div id="dialog" class="dialog fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 border border-gray-300 shadow-lg rounded-lg hidden">
+  <!-- Close button -->
+  <button id="closeButton" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <form id="inputForm" class="input-form max-w-md mx-auto">
+    <label for="input1" class="block mb-2">Enter your username:</label>
+    <input type="text" id="input1" name="input1" class="block w-full px-3 py-2 border border-gray-300 rounded mb-3" required>
+    <label for="input2" class="block mb-2">Enter the amount of Leeroy Tokens you hold:</label>
+    <input type="number" id="input2" name="input2" class="block w-full px-3 py-2 border border-gray-300 rounded mb-3" required>
+    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Submit</button>
+  </form>
+
+  <!-- Output section -->
+  <div id="output" class="mt-4 hidden">
+    <h2 class="text-lg font-semibold mb-2" id="outputHeader"></h2>
+    <ul id="outputList"></ul>
+    <p id="outputMessage" class="mt-4"></p>
+  </div>
+</div>
+
+<!-- JavaScript to handle dialog functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const dialog = document.getElementById('dialog');
+    const closeButton = document.getElementById('closeButton');
+    const inputForm = document.getElementById('inputForm');
+    const outputSection = document.getElementById('output');
+    const outputHeader = document.getElementById('outputHeader');
+    const outputList = document.getElementById('outputList');
+    const outputMessage = document.getElementById('outputMessage');
+
+    // Show dialog box when image button is clicked
+    imageButton.addEventListener('click', function() {
+      dialog.classList.remove('hidden');
+    });
+
+    // Close dialog box when close button is clicked
+    closeButton.addEventListener('click', function() {
+      dialog.classList.add('hidden');
+      // Reset form and hide output
+      inputForm.reset();
+      outputSection.classList.add('hidden');
+    });
+
+    // Close dialog box if clicked outside of it
+    dialog.addEventListener('click', function(event) {
+      if (event.target === dialog) {
+        dialog.classList.add('hidden');
+        // Reset form and hide output
+        inputForm.reset();
+        outputSection.classList.add('hidden');
+      }
+    });
+
+    // Handle form submission
+    inputForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get values from inputs
+      const input1Value = document.getElementById('input1').value;
+      const input2Value = parseFloat(document.getElementById('input2').value); // Convert to float
+
+      // Validate input2Value
+      if (isNaN(input2Value) || input2Value <= 0) {
+        alert('Please enter a valid number of tokens.');
+        return;
+      }
+
+      // Calculate token values
+      let tokensValue = input2Value;
+      let outputHtml = '';
+
+      for (let i = 1; i <= 6; i++) {
+        outputHtml += `<li>${i} month will be ${tokensValue.toLocaleString()} USD</li>`;
+        tokensValue *= 10; // Multiply by 10 for next month
+      }
+
+      // Update output section with results
+      outputHeader.textContent = `Hey ${input1Value}! If you hold ${input2Value.toLocaleString()} tokens now, your tokens value in:`;
+      outputList.innerHTML = outputHtml;
+      outputMessage.textContent = `And rise exponentially in the next 10 years. You are on your way to becoming a billionaire!`;
+
+      // Show output section
+      outputSection.classList.remove('hidden');
+    });
+  });
+</script>
+
+</body>
+</html>

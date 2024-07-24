@@ -1,0 +1,141 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Emotion Adjustment</title>
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <!-- Custom styles -->
+  <style>
+    /* Additional custom styles */
+    .dialog {
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .emotion-button {
+      cursor: pointer;
+    }
+
+    .image-preview {
+      max-height: 500px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body class="bg-white">
+
+<!-- Dialog box section -->
+<div id="dialog" class="dialog fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-6 border border-gray-300 shadow-lg rounded-lg hidden">
+  <button id="closeButton" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+    <i class="fas fa-times"></i>
+  </button>
+
+  <!-- Image upload form -->
+  <form id="uploadForm" class="max-w-md mx-auto">
+    <label for="uploadedImage" class="block mb-2">Upload your image:</label>
+    <input type="file" id="uploadedImage" name="uploadedImage" accept="image/*" class="block w-full px-3 py-2 border border-gray-300 rounded mb-3" required>
+  </form>
+
+  <!-- Emotion selection -->
+  <div class="flex justify-between items-center mt-4 mb-8">
+    <p class="text-gray-700">Select an emotion:</p>
+    <div id="emotionButtons" class="flex gap-2">
+      <!-- Emotion buttons will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Image display and adjustment -->
+  <div class="relative">
+    <img id="uploadedPreview" src="" alt="Uploaded Image Preview" class="w-full h-auto rounded-lg shadow-lg mb-4 image-preview">
+    <img id="emotionOverlay" src="" alt="Emotion Overlay" class="absolute inset-0 w-full h-full object-cover rounded-lg shadow-lg hidden">
+  </div>
+
+  <!-- Download button -->
+  <div class="flex justify-center mt-8">
+    <a id="downloadButton" href="#" download="adjusted_image.png" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 hidden">Download Adjusted Image</a>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const dialog = document.getElementById('dialog');
+    const closeButton = document.getElementById('closeButton');
+    const uploadForm = document.getElementById('uploadForm');
+    const uploadedImage = document.getElementById('uploadedImage') as HTMLInputElement;
+    const emotionButtons = document.getElementById('emotionButtons');
+    const uploadedPreview = document.getElementById('uploadedPreview') as HTMLImageElement;
+    const emotionOverlay = document.getElementById('emotionOverlay') as HTMLImageElement;
+    const downloadButton = document.getElementById('downloadButton') as HTMLAnchorElement;
+
+    const emotions = [
+      'contentment', 'hope', 'regret', 'anxiety', 'confidence',
+      'fomo', 'greed', 'impatience', 'panic', 'relief'
+    ];
+
+    // Dynamically create emotion buttons
+    emotions.forEach(emotion => {
+      const button = document.createElement('button');
+      button.textContent = emotion.charAt(0).toUpperCase() + emotion.slice(1); // Capitalize first letter
+      button.className = 'emotion-button bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded';
+      button.addEventListener('click', () => selectEmotion(emotion));
+      emotionButtons?.appendChild(button); // Optional chaining to handle potential null
+
+      // Show dialog box when main image is clicked
+      const mainImage = document.querySelector('#triggerImage');
+      mainImage?.addEventListener('click', function () {
+        dialog?.classList.remove('hidden');
+        resetDialog();
+      });
+
+      // Close dialog box when close button is clicked
+      closeButton?.addEventListener('click', function () {
+        dialog?.classList.add('hidden');
+        resetDialog();
+      });
+
+      // Handle file upload and preview
+      uploadedImage?.addEventListener('change', function () {
+        const file = this.files?.[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function () {
+            uploadedPreview.src = reader.result as string;
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Select emotion and update UI
+      function selectEmotion(emotion: string) {
+        emotionOverlay.src = `/path/to/${emotion}.png`; // Replace with actual path to emotion images
+        emotionOverlay.classList.remove('hidden');
+        downloadButton?.classList.remove('hidden');
+        updateDownloadLink();
+      }
+
+      // Update download button URL based on current selection
+      function updateDownloadLink() {
+        downloadButton.href = emotionOverlay.src;
+      }
+
+      // Reset dialog to initial state
+      function resetDialog() {
+        uploadForm?.reset();
+        uploadedPreview.src = '';
+        emotionOverlay.classList.add('hidden');
+        downloadButton?.classList.add('hidden');
+        downloadButton.removeAttribute('href');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
